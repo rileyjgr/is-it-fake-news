@@ -9,7 +9,7 @@ Schema = mongoose.Schema;
 
 // MongoDb
 const userAuth = (app) => {
-    mongoose.connect('mongodb://localhost/site-users').then(function (error) {
+    mongoose.connect('mongodb://localhost/site-auth').then(function (error) {
         if (error) {
             console.log(error)
         }
@@ -32,5 +32,3 @@ const userAuth = (app) => {
 };
 
 module.exports = userAuth;
-
-

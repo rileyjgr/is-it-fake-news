@@ -2,25 +2,29 @@ const User = require('../models/users');
 
 module.exports = {
     signUp: async (req, res, next) => {
+
+        const name = req.value.body.name;
         // validate email and password
-        const { email, password} = req.value.body.email;
+        const email = req.value.body.email;
+        const username = req.value.body.username;
+        const password = req.value.body.password;
         // Need to add functionality to if user already exists, for some reason this is not working.
         // this isnt working because I am not taking the users email. I am making a new id for each person that signs up. Regardless of what
         // there email is
-        const foundUser = await User.findOne({ email });
-            if (foundUser === true) {
-                return res.status(403).json({error: "email already exists"});
-             } else {
-                console.log('Your unique id is: ');
+        const foundUser = await User.findOne({email});
+        if (foundUser === true) {
+            return res.status(403).json({error: "email already exists"});
+        } else {
+            console.log('Your unique id is: ');
 
 
-                const newUser = new User({email, password});
+            const newUser = new User({name, username, email, password});
 
-                await newUser.save();
-                console.log(newUser);
-                res.json({user: 'created'});
-                next();
-            }
+            await newUser.save();
+            console.log(newUser);
+            res.json({user: 'created'});
+            next();
+        }
     },
 
     signIn: async (req, res, next) =>{

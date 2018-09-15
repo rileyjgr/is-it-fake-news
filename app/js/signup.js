@@ -53,6 +53,3 @@ signup.onclick = () => {
         console.log('your password does not match');
     }
 };
-
-
-
