@@ -17,6 +17,10 @@ const html = (app) => {
     app.get('/dashboard', function (req, res) {
         res.sendFile(path.join(__dirname, '../public/data.html'));
     });
+    //search page
+    app.get('/search', function (req, res) {
+        res.sendFile(path.join(__dirname, '../public/search.html'));
+    });
 
     // assets
     app.use('/static/js', express.static(path.join(__dirname, '../js')));
