@@ -7,17 +7,12 @@ const html = (app) => {
     app.get('/', function (req, res) {
         res.sendFile(path.join(__dirname, '../public/home.html'));
     });
-
-    //login page
-    app.get('/login', function (req, res) {
+    app.get('/login', function(req, res){
         res.sendFile(path.join(__dirname, '../public/login.html'));
     });
-
-    //sign up page
-    app.get('/signup', function (req, res) {
+    app.get('/signup', function(req, res){
         res.sendFile(path.join(__dirname, '../public/signup.html'));
     });
-
     //data page
     app.get('/dashboard', function (req, res) {
         res.sendFile(path.join(__dirname, '../public/data.html'));

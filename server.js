@@ -7,7 +7,6 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const path = require('path');
 
 const app = express();
 
@@ -18,11 +17,15 @@ app.use(morgan('dev'));
 
 // express file for requests
 const getRoute = require('./app/routing/findArtilce.js');
-    getRoute(app);
+getRoute(app);
 
 // routing for html
 const htmlRoute = require('./app/routing/htmlRoute.js');
-    htmlRoute(app);
+htmlRoute(app);
+
+// routing for auth
+const authRoute = require('./app/auth/app.js');
+    authRoute(app);
 
 const port = process.env.PORT || 3000;
 
