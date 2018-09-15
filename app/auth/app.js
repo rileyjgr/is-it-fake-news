@@ -9,7 +9,7 @@ Schema = mongoose.Schema;
 
 // MongoDb
 const userAuth = (app) => {
-    mongoose.connect('mongodb://localhost/APIAuthentication').then(function (error) {
+    mongoose.connect('mongodb://localhost/site-users').then(function (error) {
         if (error) {
             console.log(error)
         }
