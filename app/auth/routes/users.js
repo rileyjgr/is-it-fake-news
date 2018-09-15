@@ -21,6 +21,5 @@ const UsersController = require('../controllers/users');
         .get(UsersController.secret);
 
 
-
 module.exports = router;
 
