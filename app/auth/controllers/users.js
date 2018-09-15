@@ -9,8 +9,7 @@ module.exports = {
         const username = req.value.body.username;
         const password = req.value.body.password;
         // Need to add functionality to if user already exists, for some reason this is not working.
-        // this isnt working because I am not taking the users email. I am making a new id for each person that signs up. Regardless of what
-        // there email is
+
         const foundUser = await User.findOne({email});
         if (foundUser === true) {
             return res.status(403).json({error: "email already exists"});
