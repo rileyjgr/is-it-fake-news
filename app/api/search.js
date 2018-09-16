@@ -6,7 +6,7 @@ const https      = require('https');
 
 
 
-let parseSearch = require('./search/data.js');
+let information = require('./search/data.js');
 
 // have to make a request, based on the users search
 // the json result will then be displayed on the page
@@ -14,21 +14,8 @@ let parseSearch = require('./search/data.js');
 // to the my api.
 //Then we have an ai or some sort of cross check to other sources, to determine,
 // whether the news is "fake" or not
-
-// const news = 'https://newsapi.org/v2/everything?';
-// let term = 'q=' + userInput;
-// let dateRange = '';
-// let url = 'https://newsapi.org/v2/everything?' +
-//     'q=Apple&' +
-//     'from=2018-09-15&' +
-//     'sortBy=popularity&' +
-//     'apiKey='+ key;
-
-// let request = new Request(url);
-// fetch(request)
-//     .then(function(response) {
-//         console.log(response.json());
-//     });
+//giving an article a score based on the presence, total number, or frequency of certain words appearing
+//to categorize an article you might need a number of different scores like that, with different tests of what you're looking for
 
 require('dotenv').config();
 
@@ -39,7 +26,7 @@ const search = (app) => {
 
 
     app.get('/api/search', function(req, res){
-        res.json(parseSearch);
+        res.json(information);
     });
 
     const urlencodedParser = bodyParser.urlencoded({extended: false});
@@ -48,10 +35,14 @@ const search = (app) => {
     app.post('/api/search', urlencodedParser, parseJson, function(req,res){
 
         const getSearch = req.body;
+        let source = '';
+        let author = '';
+        let title  = '';
+        let article = '';
 
         getSearch(function(){
             const newsApi   = 'https://newsapi.org/v2/everything?q=';
-            const dateRange = 'from=' + getSearch.date + '&';
+            const dateRange = 'from=today&';
             const query     = getSearch.input +'&';
             const key       = 'apiKey=' + process.env.MY_API_KEY;
 
@@ -73,6 +64,11 @@ const search = (app) => {
                     // push the data to information array
                     .on('end', () => {
                         information.push(data);
+                        source = data.id;
+                        author = data.author;
+                        title  = data.title;
+                        article = data.content;
+
                     });
 
             })
@@ -82,14 +78,18 @@ const search = (app) => {
                     });
             // end of https request
 
-
-
         });
 
+        // const analyze = () => {
+        //
+        // };
 
 
         res.json({
-
+               source: source,
+               author: author,
+               title: title,
+                article: article
         });
     });
 };
