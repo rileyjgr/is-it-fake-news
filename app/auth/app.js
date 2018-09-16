@@ -13,9 +13,7 @@ const userAuth = (app) => {
         if (error) {
             console.log(error)
         }
-
         // Middle wares
-
         app.use(morgan('dev'));
         app.use(bodyParser.json());
 

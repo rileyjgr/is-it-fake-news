@@ -17,11 +17,11 @@ app.use(morgan('dev'));
 
 // express file for requests
 const getRoute = require('./app/routing/findArtilce.js');
-getRoute(app);
+    getRoute(app);
 
 // routing for html
 const htmlRoute = require('./app/routing/htmlRoute.js');
-htmlRoute(app);
+    htmlRoute(app);
 
 // routing for auth
 const authRoute = require('./app/auth/app.js');
