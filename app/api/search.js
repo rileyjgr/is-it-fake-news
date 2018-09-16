@@ -1,9 +1,10 @@
-const express = require('express');
-    app = express();
-
-const axios = require('axios');
+const express    = require('express');
 const morgan     = require('morgan');
 const bodyParser = require('body-parser');
+const https      = require('https');
+    app = express();
+
+
 
 let parseSearch = require('./search/data.js');
 
@@ -45,16 +46,43 @@ const search = (app) => {
     const parseJson = bodyParser.json();
 
     app.post('/api/search', urlencodedParser, parseJson, function(req,res){
+
         const getSearch = req.body;
 
-        getSearch(function(data){
-            const dateRange = '\'from=' + data.range;
-            const query     = data.search +'&';
+        getSearch(function(){
+            const newsApi   = 'https://newsapi.org/v2/everything?q=';
+            const dateRange = 'from=' + getSearch.date + '&';
+            const query     = getSearch.input +'&';
             const key       = 'apiKey=' + process.env.MY_API_KEY;
 
-            const url = 'https://newsapi.org/v2/everything?\q=' + query + dateRange + key;
+            const url = newsApi + query + dateRange + key;
 
-            
+            //make call to api
+            //send the data to information array.
+            // take data in information array, and send this data to the users browsers,
+            // after we have analyzed it. (not sure how we are going to do this yet... we could make an ai, or find a library for fake news or something?)
+
+            // start https request
+            https.get(url, (resp)=> {
+                let data = '';
+                resp
+                    .on('data', (chunk) =>{
+                        data += chunk;
+                    });
+                resp
+                    // push the data to information array
+                    .on('end', () => {
+                        information.push(data);
+                    });
+
+            })
+                    // throw the error
+                    .on("error", (err) => {
+                        console.log("Error: " + err.message);
+                    });
+            // end of https request
+
+
 
         });
 
@@ -64,8 +92,6 @@ const search = (app) => {
 
         });
     });
-
-
 };
 
 module.exports = search;
