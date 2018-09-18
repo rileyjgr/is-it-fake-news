@@ -1,7 +1,8 @@
 const express    = require('express');
 const morgan     = require('morgan');
 const bodyParser = require('body-parser');
-const https      = require('https');
+const a          = require('axios');
+const tf = require('@tensorflow/tfjs');
     app = express();
 
 
@@ -17,7 +18,7 @@ let information = require('./search/data.js');
 //giving an article a score based on the presence, total number, or frequency of certain words appearing
 //to categorize an article you might need a number of different scores like that, with different tests of what you're looking for
 
-require('dotenv').config();
+require('dotenv').config({path: __dirname + '/.env'});
 
 const search = (app) => {
     // Middle wares
@@ -33,52 +34,35 @@ const search = (app) => {
     const parseJson = bodyParser.json();
 
     app.post('/api/search', urlencodedParser, parseJson, function(req,res){
-
-        const getSearch = req.body;
+        userSearch = req.body[0].search;
+        console.log(userSearch);
         let source = '';
         let author = '';
         let title  = '';
         let article = '';
 
-        getSearch(function(){
-            const newsApi   = 'https://newsapi.org/v2/everything?q=';
-            const dateRange = 'from=today&';
-            const query     = getSearch.input +'&';
-            const key       = 'apiKey=' + process.env.MY_API_KEY;
+        const newsApi   = 'https://newsapi.org/v2/everything?q=';
+        const dateRange = 'from=today&';
+        const query     = userSearch +'&';
+        const key       = 'apiKey=' + process.env.MY_API_KEY;
 
-            const url = newsApi + query + dateRange + key;
+        const url = newsApi + query + dateRange + key;
 
-            //make call to api
-            //send the data to information array.
-            // take data in information array, and send this data to the users browsers,
-            // after we have analyzed it. (not sure how we are going to do this yet... we could make an ai, or find a library for fake news or something?)
-
-            // start https request
-            https.get(url, (resp)=> {
-                let data = '';
-                resp
-                    .on('data', (chunk) =>{
-                        data += chunk;
-                    });
-                resp
-                    // push the data to information array
-                    .on('end', () => {
-                        information.push(data);
-                        source = data.id;
-                        author = data.author;
-                        title  = data.title;
-                        article = data.content;
-
-                    });
-
-            })
-                    // throw the error
-                    .on("error", (err) => {
-                        console.log("Error: " + err.message);
-                    });
-            // end of https request
-
+        // make call to api, based on users input
+        // send the data to information array.
+        // analyze the data from news api. (not sure how we are going to do this yet... we could make an ai, or find a library for fake news or something?)
+        // take data in information array, and send this data to the users browsers, after we have analyzed it.
+        // start https request
+        a.get(url)
+        .then(function(response){
+          information.push(response.data);
+        }).catch(function(error){
+          if (error){
+            console.log(error);
+          }
         });
+
+          // end of https request
 
         // const analyze = () => {
         //
@@ -89,10 +73,17 @@ const search = (app) => {
                source: source,
                author: author,
                title: title,
-                article: article
+               article: article
         });
     });
 };
 
 module.exports = search;
 
+/*
+                        information.push(data);
+                        source = data.id;
+                        author = data.author;
+                        title  = data.title;
+                        article = data.content;
+                        console.log('sent response'); */
