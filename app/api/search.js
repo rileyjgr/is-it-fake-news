@@ -4,10 +4,8 @@ const bodyParser = require('body-parser');
 const a          = require('axios');
     app = express();
 
-
-
 let information = require('./search/data.js');
-
+let requestNumber = -1;
 // have to make a request, based on the users search
 // the json result will then be displayed on the page
 // after that, make it so when the user search it posts the data,
@@ -33,7 +31,9 @@ const search = (app) => {
     const parseJson = bodyParser.json();
 
     app.post('/api/search', urlencodedParser, parseJson, function(req,res){
+
         userSearch = req.body[0].search;
+        requestNumber++;
         console.log(userSearch);
         let source = '';
         let author = '';
@@ -47,21 +47,28 @@ const search = (app) => {
 
         const url = newsApi + query + dateRange + key;
 
+
+
         // make call to api, based on users input
         // send the data to information array.
         // analyze the data from news api. (not sure how we are going to do this yet... we could make an ai, or find a library for fake news or something?)
         // take data in information array, and send this data to the users browsers, after we have analyzed it.
+
         // start https request
         a.get(url)
         .then(function(response){
-          information.push(response.data);
+          // push data to individual users array
+            console.log(requestNumber);
+          information.push({[requestNumber]: response.data});
+          response.data.forEach(articles, function() {
+              // push to their own array here (maybe?)
+            });
         }).catch(function(error){
           if (error){
             console.log(error);
           }
         });
-
-          // end of https request
+        // end of https request
 
         // const analyze = () => {
         //
@@ -78,11 +85,3 @@ const search = (app) => {
 };
 
 module.exports = search;
-
-/*
-                        information.push(data);
-                        source = data.id;
-                        author = data.author;
-                        title  = data.title;
-                        article = data.content;
-                        console.log('sent response'); */
