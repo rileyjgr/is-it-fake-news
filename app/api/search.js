@@ -60,9 +60,12 @@ const search = (app) => {
           // push data to individual users array
             console.log(requestNumber);
           information.push({[requestNumber]: response.data});
-          response.data.forEach(articles, function() {
-              // push to their own array here (maybe?)
-            });
+          // response.data.forEach([requestNumber].[3], function() {
+          //
+          //     for (let i = 0; i<=response.data.length; i++){
+          //         // push to their own array here (maybe?)
+          //     }
+          //   });
         }).catch(function(error){
           if (error){
             console.log(error);
